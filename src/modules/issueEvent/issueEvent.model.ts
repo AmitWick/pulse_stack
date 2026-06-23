@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { InferSchemaType } from "mongoose";
 
 const issueEventSchema = new mongoose.Schema(
   {
@@ -164,5 +165,10 @@ issueEventSchema.index({
 //     return ret;
 //   },
 // });
+
+export type IssueEventType = Omit<
+  InferSchemaType<typeof issueEventSchema>,
+  "createdAt" | "updatedAt"
+>;
 
 export const IssueEventModel = mongoose.model("IssueEvent", issueEventSchema);

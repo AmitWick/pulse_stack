@@ -1,6 +1,5 @@
-import { CreateIssueEventType } from "@/types/issue.js";
-import { IssueEventModel } from "./issueEvent.model.js";
+import { IssueEventModel, IssueEventType } from "./issueEvent.model.js";
 
-export const issueEventBulkInserted = (data: CreateIssueEventType[]) => {
+export const issueEventBulkInserted = (data: IssueEventType[]) => {
   return IssueEventModel.insertMany(data);
 };

@@ -11,13 +11,6 @@ type User = {
   email: string;
 };
 
-type CreateIssueEventType = Omit<CreateIssueType, "name" | "message"> & {
-  issueId: string;
-  projectId: string;
-  user: User;
-  fingerprint: string;
-};
-
 export type CreateIssueType = {
   message: string;
   name: string;
@@ -56,7 +49,7 @@ export type CreateIssueType = {
   };
   device?: string;
 
-  tags?: Record<string, string>;
+  tags?: Map<string, string> | null | undefined;
 
   metadata?: any;
 

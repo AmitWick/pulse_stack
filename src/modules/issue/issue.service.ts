@@ -1,9 +1,10 @@
-import { CreateIssueEventType, ErrorBucket } from "@/types/issue.js";
+import { ErrorBucket } from "@/types/issue.js";
 import { SDK_ENCRYPTION_OBJECT } from "@/types/sdk.js";
 import generateFingerPrint from "@/utils/generateFingerPrint.js";
 import { createUpdateIssueBulkWriteDB } from "./issue.db.js";
 import { issueEventBulkInserted } from "../issueEvent/issueEvent.db.js";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
+import { IssueEventType } from "../issueEvent/issueEvent.model.js";
 
 export const createNewIssue = async (
   sdk: SDK_ENCRYPTION_OBJECT,
@@ -38,7 +39,9 @@ export const createNewIssue = async (
   //   insertedIds: {}
   // }
 
-  const issueEventArr: CreateIssueEventType[] = [];
+  const issueEventArr: IssueEventType[] = [];
+
+  console.log("processedErrors", processedErrors);
 
   for (const [key, value] of Object.entries(issueCreatedUpdated.upsertedIds)) {
     if (!key || !value) continue;
@@ -52,9 +55,9 @@ export const createNewIssue = async (
 
     const { name, message, ...eventData } = bucket.error;
 
-    const obj: CreateIssueEventType = {
-      issueId,
-      projectId: sdk.projectId,
+    const obj: IssueEventType = {
+      issueId: issueId as unknown as Types.ObjectId,
+      projectId: sdk.projectId as unknown as Types.ObjectId,
       user: {
         id: sdk.id,
         name: sdk.name,
@@ -66,6 +69,8 @@ export const createNewIssue = async (
 
     issueEventArr.push(obj);
   }
+
+  console.log("issueEventArr", issueEventArr);
 
   const addIssueEvents = await issueEventBulkInserted(issueEventArr);
 

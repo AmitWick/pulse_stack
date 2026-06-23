@@ -9,12 +9,6 @@ export const createNewIssueController = async (
 ) => {
   const sdk = request.sdk;
 
-  if (!request.body) {
-    return reply.code(404).send({
-      message: "Body is not present",
-    });
-  }
-
   const errData = decompressBody<ErrorBucket>(request);
 
   await createNewIssue(sdk, errData);
